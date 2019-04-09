@@ -1,0 +1,135 @@
+<html>
+	<head>
+		<title>Weavemail</title>
+		<script src="https://unpkg.com/arweave/bundles/web.bundle.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="milligram.min.css">
+
+		<script src="crypto.js"></script>
+		<script src="login.js"></script>
+		<script src="inbox.js"></script>
+		<script src="view.js"></script>
+		<script src="compose.js"></script>
+		<script>
+			var arweave = Arweave.init({host: 'arweave.net', port: 443, protocol: 'https'});
+			var wallet = {};
+			var content = "";
+
+			function switch_to_page(page) {
+				let pages =
+					[
+						"home_page",
+						"inbox_page",
+						"view_page",
+						"compose_page"
+					];
+
+				pages.forEach(function(p) {
+					var elem = document.getElementById(p);
+					elem.style.display = 'none';
+				});
+
+				var elem = document.getElementById(page);
+				elem.style.display = 'block';
+			}
+		</script>
+
+		<style>
+			header .container {
+				margin-top: 10em;
+				text-align: center;
+				max-width: 100rem;
+				width: 50%;
+			}
+
+			.file-input{
+				height: 200px;
+				border: 2px dashed #62666f;
+				text-align: center;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				position: relative;
+				margin: auto;
+				max-width: 300px;
+			}
+
+			.file-input input[type=file]{
+				opacity: 0;
+				position: absolute;
+				background: none;
+				width: 100%;
+				height: 100%;
+			}
+
+			#view_contents {
+				margin-left: 1em;
+				margin-bottom: 1em;
+				word-wrap: break-word;
+				max-width: 50em;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="home_page" class="">
+			<header>
+				<div class="container">
+					<h1 class="">Weavemail</h1>
+					<div class="file-input">
+						<input type="file" id="file" onchange="login(this.files)" >
+						<div id="desc">Drop a keyfile to login.</div>
+					</div>
+					<div class="">
+						<p>
+							<br>
+							Weavemail is mail that <b>Google cannot read</b>.<br>
+							Mail that <b>cannot be censored</b>.<br>
+							Mail that <b>cannot be lost</b>.<br>
+							<span style="display: inline-block; margin-top: 0.5em; margin-bottom: 0.75em;">Weavemail is mail that <b>you own</b>.</span><br>
+						</p>
+						<button
+							class="button button-outline"
+							onclick=" window.open('https://tokens.arweave.org','_blank')">
+							Get a wallet with some tokens.
+						</button>
+					</div>
+				</div>
+			</header>
+		</div>
+		<div id="inbox_page" style="display: none;">
+			<h1 id="mail_address" style="display: inline-block; margin-right: 0.5em;">...</h1>
+			<button onclick="compose_mail()">Compose</button>
+			<table>
+				<thead>
+					<tr>
+						<td>Sender</td>
+						<td>ID</td>
+						<td>Fee</td>
+						<td>AR</td>
+					</tr>
+				</thead>
+				<tbody id="inbox_pane">
+
+				</tbody>
+			</table>
+		</div>
+		<div id="view_page" style="display: none;">
+			<h1 id="view_title">View mail</h1>
+			<div id="view_contents">...</div>
+			<button id="reply">Reply</button>
+			<button onclick="switch_to_page('inbox_page')">Back to inbox</button>
+		</div>
+		<div id="compose_page" style="display: none;">
+			<fieldset>
+				<h1>Write a new permamail</h1>
+				<label for="compose_address">Mail recipient</label>
+				<input type="text" placeholder="Arweave address" id="compose_address">
+				<label for="compose_content">Mail contents</label>
+				<textarea id="compose_content"></textarea>
+				<label for="compose_address">AR tokens to send</label>
+				<input type="text" placeholder="0 AR" id="compose_tokens"><br>
+				<button onclick="send_mail()">Send</button>
+				<button onclick="switch_to_page('inbox_page')">Discard message</button>
+			</fieldset>
+		</div>
+	</body>
+</html>
