@@ -13,15 +13,17 @@ You can try it out over at [weavemail.app](https://weavemail.app). The domain pr
 
 Weavemail uses the [Arweave HTTP API](https://docs.arweave.org/developers/server/http-api), [Arweave JS](https://github.com/ArweaveTeam/arweave-js) 🛠️, and published with [Arweave Deploy](https://github.com/ArweaveTeam/arweave-deploy).
 
+You can launch a copy by installing [Arweave Deploy](https://github.com/ArweaveTeam/arweave-deploy) and running `arweave deploy permamail.html --key-file [PATH_TO_KEY] --package`. Once the transaction is mined into the block, you will be able to access it at the given TXID, at any Arweave HTTPS gateway.
+
 ## How does it work?
 
-# Sending messages
+*Sending messages*
 
 1. Messages are encrypted with the recipients public key using [RSA-OAEP](https://en.wikipedia.org/wiki/Optimal_asymmetric_encryption_padding) and . [crypto.js](https://github.com/ArweaveTeam/weavemail/blob/master/crypto.js)
 
 2. After encrypting the message contents for the recipient, messages are packaged into an Arweave transaction, tagged, and submitted to the network. [compose.js](https://github.com/ArweaveTeam/weavemail/blob/master/compose.js)
 
-# Receiving messages
+*Receiving messages*
 
 1. ArQL is used to get your messages from the network. The query is asking for transactions that are a) addressed to you and b) tagged with `App-Name:permamail`. [inbox.js](https://github.com/ArweaveTeam/weavemail/blob/master/inbox.js)
 
