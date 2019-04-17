@@ -11,6 +11,7 @@ function send_mail() {
 		var content = compose_content.value;
 		var compose_tokens = document.getElementById("compose_tokens");
 		var tokens = compose_tokens.value;
+		var mailTagUnixTime = Math.round((new Date()).getTime() / 1000);
 
 		if(tokens == "") {
 			tokens = "0";
@@ -29,7 +30,7 @@ function send_mail() {
 
 		var tx =
 			await arweave.createTransaction(
-				{ 
+				{
 					target: address,
 					data: arweave.utils.concatBuffers([content]),
 					quantity: tokens
@@ -39,6 +40,7 @@ function send_mail() {
 
 		tx.addTag('App-Name', 'permamail');
 		tx.addTag('App-Version', '0.0.1');
+		tx.addTag('UnixTime',mailTagUnixTime);
 		await arweave.transactions.sign(tx, wallet);
 		console.log(tx.id);
 		await arweave.transactions.post(tx);
