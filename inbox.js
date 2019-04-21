@@ -2,7 +2,7 @@ function refresh_inbox(wallet) {
 	(async () => {
 		var address = await arweave.wallets.jwkToAddress(wallet);
 
-		let query = 
+		let query =
 			{
 				op: "and",
 				expr1:
@@ -20,11 +20,37 @@ function refresh_inbox(wallet) {
 			};
 
     	const res = await this.arweave.api.post(`arql`, query);
+		var mail_UnixTime = [];
 		if(res.data == "") {
 			var mail_ids = [];
 		}
 		else {
 			var mail_ids = res.data;
+
+			mail_ids.map(async function(id,i) {
+
+				let tx_row={};
+				var tx = await this.arweave.transactions.get(id);
+				tx_row['unixTime']="0";
+				tx.get('tags').forEach(tag => {
+				let key = tag.get('name', {decode: true, string: true});
+				let value = tag.get('value', {decode: true, string: true});
+				if(key==="Unix-Time") tx_row['unixTime']=value;
+
+			});
+
+			tx_row['id']=id;
+			tx_row['tx_status'] = await this.arweave.transactions.getStatus(id);
+			tx_row['from'] = await arweave.wallets.ownerToAddress(tx.owner);
+			tx_row['td_fee'] = arweave.ar.winstonToAr(tx.reward);
+			tx_row['td_qty'] = arweave.ar.winstonToAr(tx.quantity);
+
+			mail_UnixTime.push(tx_row);
+
+			if(mail_UnixTime.length===mail_ids.length)	displayMails();
+
+		});
+
 		}
 
 		console.log(mail_ids);
@@ -38,32 +64,37 @@ function refresh_inbox(wallet) {
 			inbox_pane.removeChild(inbox_pane.firstChild);
 		}
 
-		mail_ids.forEach(async function(id) {
-			var tr = document.createElement("tr");
-			var td_name = document.createElement("td");
-			var td_from = document.createElement("td");
-			var td_fee = document.createElement("td");
-			var td_qty = document.createElement("td");
-			var link = document.createElement("a");
-			tr.appendChild(td_from);
-			tr.appendChild(td_name);
-			tr.appendChild(td_fee);
-			tr.appendChild(td_qty);
-			td_name.appendChild(link);
 
-			var tx = await this.arweave.transactions.get(id);
-			var tx_status = await this.arweave.transactions.getStatus(id);
-			td_from.innerHTML = await arweave.wallets.ownerToAddress(tx.owner);
-			td_fee.innerHTML = arweave.ar.winstonToAr(tx.reward);
-			td_qty.innerHTML = arweave.ar.winstonToAr(tx.quantity);
+			function displayMails(){
 
-			link.innerHTML = id;
-			link.onclick = function() { show_mail(id) };
+			mail_UnixTime.sort((a,b)=>(Number(b.unixTime) - Number(a.unixTime)));
 
-			inbox_pane.appendChild(tr);
-		});
+
+			inbox_pane.innerHTML="";
+			mail_UnixTime.forEach( function(item) {
+				var tr = document.createElement("tr");
+				var td_name = document.createElement("td");
+				var td_from = document.createElement("td");
+				var td_fee = document.createElement("td");
+				var td_qty = document.createElement("td");
+				var link = document.createElement("a");
+				tr.appendChild(td_from);
+				tr.appendChild(td_name);
+				tr.appendChild(td_fee);
+				tr.appendChild(td_qty);
+				td_name.appendChild(link);
+
+				var tx_status = item.tx_status;
+				td_from.innerHTML = item.from;
+				td_fee.innerHTML = item.td_fee;
+				td_qty.innerHTML = item.td_qty;
+
+				link.innerHTML = item.id;
+				link.onclick = function() { show_mail(item.id) };
+
+				inbox_pane.appendChild(tr);
+			});
+			}
 
 	})();
 }
-
-
