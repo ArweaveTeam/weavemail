@@ -20,7 +20,8 @@
 						"home_page",
 						"inbox_page",
 						"view_page",
-						"compose_page"
+						"compose_page",
+						"previous_page"
 					];
 
 				pages.forEach(function(p) {
@@ -129,6 +130,12 @@
 				<input type="text" placeholder="0 AR" id="compose_tokens"><br>
 				<button onclick="send_mail()">Send</button>
 				<button onclick="switch_to_page('inbox_page')">Discard message</button>
+			</fieldset>
+			<fieldset id="previous_page" style="display: none;">
+				<h1>Previous Message</h1>
+				<div><span><strong>From: </strong></span><span id="previousSender"></span></div>
+				<div id="previousDateTag"><span><strong>Date: </strong></span><span id="previousDateMsg"></span></div>
+				<p id="previousMsg"></p>
 			</fieldset>
 		</div>
 	</body>

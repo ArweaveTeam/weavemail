@@ -29,7 +29,7 @@ function send_mail() {
 
 		var tx =
 			await arweave.createTransaction(
-				{ 
+				{
 					target: address,
 					data: arweave.utils.concatBuffers([content]),
 					quantity: tokens
@@ -39,6 +39,7 @@ function send_mail() {
 
 		tx.addTag('App-Name', 'permamail');
 		tx.addTag('App-Version', '0.0.1');
+		tx.addTag('Unix-Time',mailTagUnixTime);
 		await arweave.transactions.sign(tx, wallet);
 		console.log(tx.id);
 		await arweave.transactions.post(tx);
