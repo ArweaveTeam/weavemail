@@ -9,6 +9,7 @@ function show_mail (txid) {
         var previousMsg = document.getElementById('previousMsg')
         var previousDateMsg = document.getElementById('previousDateMsg')
         var previousDateTag = document.getElementById('previousDateTag')
+        var previousSubject = document.getElementById('previousSubject')
         var previous_page = document.getElementById('previous_page')
         var unixTime = '0'
 
@@ -30,7 +31,13 @@ function show_mail (txid) {
 
             previousDateMsg.innerHTML = timeConverter(unixTime)
             previousSender.innerHTML = recipient.value
-            previousMsg.innerHTML = mail;
+            previousMsg.innerHTML = mail
+            previousSubject.innerHTML=""
+
+            if(mailContent){
+              previousMsg.innerHTML = mailContent.body
+              previousSubject.innerHTML=mailContent.subject
+            }
 
             (unixTime === '0') ? previousDateTag.style.display = 'none' : previousDateTag.style.display = 'block'
 
@@ -43,8 +50,20 @@ function show_mail (txid) {
 			    await decrypt_mail(arweave.utils.b64UrlToBuffer(tx.data), key))
 
         mail = mail.replace(/(?:\r\n|\r|\n)/g, '<br>')
+        var mailContent
+
+        try {
+          mailContent= JSON.parse(mail);
+        } catch (e) {}
 
         view_contents.innerHTML = mail
+        view_subject.innerHTML = ""
+
+
+        if(mailContent){
+        view_contents.innerHTML = mailContent.body
+        view_subject.innerHTML = mailContent.subject
+        }
 
         function timeConverter (UNIX_timestamp) {
             var a = new Date(UNIX_timestamp * 1000)

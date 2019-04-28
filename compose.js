@@ -38,7 +38,7 @@ function send_mail () {
 			)
 
         tx.addTag('App-Name', 'permamail')
-        tx.addTag('App-Version', '0.0.1')
+        tx.addTag('App-Version', '0.0.2')
         tx.addTag('Unix-Time', mailTagUnixTime)
         await arweave.transactions.sign(tx, wallet)
         console.log(tx.id)
