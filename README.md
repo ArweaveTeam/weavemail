@@ -1,17 +1,12 @@
 # Weavemail
 
+Weavemail is a prototype decentralised mail system. It runs on the [Arweave network](https://arweave.org), so its messages and the web app itself are _permanent_ and _always_ available on the permaweb.
 
-## What is it?
-
-Weavemail is a prototype decentralised email replacement. It runs on the [Arweave network](https://arweave.org), so its messages and the web app itself are _permanent_ and _always_ available on the permaweb.
-
-The Arweave Team built this prototype implementation as part of a hackathon.
-
-You can try it out over at [weavemail.app](https://weavemail.app). The domain proxies to an Arweave node, which can serve you the app. You can also pick up a wallet and some free tokens at [tokens.arweave.org](http://tokens.arweave.org). Our weavemail address is `vLRHFqCw1uHu75xqB4fCDW-QxpkpJxBtFD9g4QYUbfw`.
+You can try it out at [weavemail.app](https://weavemail.app). The domain proxies to an Arweave node, which can serve you the app. You can also pick up a wallet and some free tokens at [tokens.arweave.org](http://tokens.arweave.org). The repository maintainer's weavemail address is `vLRHFqCw1uHu75xqB4fCDW-QxpkpJxBtFD9g4QYUbfw`.
 
 ## How is it built?
 
-Weavemail uses the [Arweave HTTP API](https://docs.arweave.org/developers/server/http-api), [Arweave JS](https://github.com/ArweaveTeam/arweave-js) 🛠️, and published with [Arweave Deploy](https://github.com/ArweaveTeam/arweave-deploy).
+Weavemail uses the [Arweave HTTP API](https://docs.arweave.org/developers/server/http-api), [Arweave JS](https://github.com/ArweaveTeam/arweave-js) 🛠️, and is published with [Arweave Deploy](https://github.com/ArweaveTeam/arweave-deploy).
 
 You can launch a copy by installing [Arweave Deploy](https://github.com/ArweaveTeam/arweave-deploy) and running `arweave deploy permamail.html --key-file [PATH_TO_KEY] --package`. Once the transaction is mined into the block, you will be able to access it at the given TXID, at any Arweave HTTPS gateway.
 
