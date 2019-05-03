@@ -26,7 +26,7 @@ function send_mail () {
             return
         }
 
-        content = await encrypt_mail(content,subject, pub_key)
+        content = await encrypt_mail(content, subject, pub_key)
         console.log(content)
 
         var tx =

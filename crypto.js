@@ -1,6 +1,6 @@
-async function encrypt_mail (content,subject, pub_key) {
+async function encrypt_mail (content, subject, pub_key) {
     var content_encoder = new TextEncoder()
-    var newFormat=JSON.stringify({"subject":subject,"body":content})
+    var newFormat = JSON.stringify({ 'subject': subject, 'body': content })
     var mail_buf = content_encoder.encode(newFormat)
     var key_buf = await generate_random_bytes(256)
 

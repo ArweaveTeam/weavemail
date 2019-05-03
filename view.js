@@ -14,8 +14,6 @@ function show_mail (txid) {
         var previous_page = document.getElementById('previous_page')
         var unixTime = '0'
 
-      //  mail_id.textContent = txid
-        view_subject.innerHTML=txid
         var tx = await arweave.transactions.get(txid)
 
         tx.get('tags').forEach(tag => {
@@ -33,11 +31,11 @@ function show_mail (txid) {
             previousDateMsg.innerHTML = timeConverter(unixTime)
             previousSender.innerHTML = recipient.value
             previousMsg.innerHTML = mail
-            previousSubject.innerHTML=txid
+            previousSubject.innerHTML = txid
 
-            if(mailContent){
-              previousMsg.innerHTML = mailContent.body
-            //  previousSubject.innerHTML=txid;
+            if (mailContent) {
+                previousMsg.innerHTML = mailContent.body
+                previousSubject.innerHTML = mailContent.subject
             }
 
             (unixTime === '0') ? previousDateTag.style.display = 'none' : previousDateTag.style.display = 'block'
@@ -54,16 +52,15 @@ function show_mail (txid) {
         var mailContent
 
         try {
-          mailContent= JSON.parse(mail);
+            mailContent = JSON.parse(mail)
         } catch (e) {}
 
         view_contents.innerHTML = mail
-      //  view_subject.innerHTML = ""
+        view_subject.innerHTML = txid
 
-
-        if(mailContent){
-        view_contents.innerHTML = mailContent.body
-      //  view_subject.innerHTML = mailContent.subject
+        if (mailContent) {
+            view_contents.innerHTML = mailContent.body
+            view_subject.innerHTML = mailContent.subject
         }
 
         function timeConverter (UNIX_timestamp) {
