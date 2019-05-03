@@ -6,6 +6,8 @@ function send_mail () {
     (async () => {
         var compose_address = document.getElementById('compose_address')
         var address = compose_address.value
+        var compose_subject = document.getElementById('compose_subject')
+        var subject = compose_subject.value
         var compose_content = document.getElementById('compose_content')
         var content = compose_content.value
         var compose_tokens = document.getElementById('compose_tokens')
@@ -24,7 +26,7 @@ function send_mail () {
             return
         }
 
-        content = await encrypt_mail(content, pub_key)
+        content = await encrypt_mail(content, subject, pub_key)
         console.log(content)
 
         var tx =
@@ -38,7 +40,7 @@ function send_mail () {
 			)
 
         tx.addTag('App-Name', 'permamail')
-        tx.addTag('App-Version', '0.0.1')
+        tx.addTag('App-Version', '0.0.2')
         tx.addTag('Unix-Time', mailTagUnixTime)
         await arweave.transactions.sign(tx, wallet)
         console.log(tx.id)

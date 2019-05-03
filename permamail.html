@@ -114,16 +114,23 @@
 			</table>
 		</div>
 		<div id="view_page" style="display: none;">
+			<fieldset>
 			<h1 id="view_title">View mail</h1>
+			<label for="view_subject">Mail subject</label>
+			<p id="view_subject">View mail</p>
+			<label for="view_contents">Mail contents</label>
 			<div id="view_contents">...</div>
 			<button id="reply">Reply</button>
 			<button onclick="switch_to_page('inbox_page')">Back to inbox</button>
+	  	</fieldset>
 		</div>
 		<div id="compose_page" style="display: none;">
 			<fieldset>
 				<h1>Write a new permamail</h1>
 				<label for="compose_address">Mail recipient</label>
 				<input type="text" placeholder="Arweave address" id="compose_address">
+				<label for="compose_subject">Mail subject</label>
+				<input type="text" placeholder="Subject" id="compose_subject">
 				<label for="compose_content">Mail contents</label>
 				<textarea id="compose_content"></textarea>
 				<label for="compose_address">AR tokens to send</label>
@@ -135,6 +142,9 @@
 				<h1>Previous Message</h1>
 				<div><span><strong>From: </strong></span><span id="previousSender"></span></div>
 				<div id="previousDateTag"><span><strong>Date: </strong></span><span id="previousDateMsg"></span></div>
+				<label for="previousSubject">Mail subject</label>
+				<p id="previousSubject">View mail</p>
+				<label for="previousMsg">Mail contents</label>
 				<p id="previousMsg"></p>
 			</fieldset>
 		</div>
