@@ -2,7 +2,7 @@ function refresh_inbox (wallet) {
     (async () => {
         var address = await arweave.wallets.jwkToAddress(wallet)
 
-        let query =
+        let get_mail_query =
 			{
 			    op: 'and',
 			    expr1:
@@ -19,7 +19,9 @@ function refresh_inbox (wallet) {
 					}
 			}
 
-    	const res = await this.arweave.api.post(`arql`, query)
+    	const res = await this.arweave.api.post(`arql`, get_mail_query)
+
+
         var tx_rows = []
         if (res.data == '') {
             tx_rows = []
@@ -36,7 +38,8 @@ function refresh_inbox (wallet) {
 
                 tx_row['id'] = id
                 tx_row['tx_status'] = await this.arweave.transactions.getStatus(id)
-                tx_row['from'] = await arweave.wallets.ownerToAddress(tx.owner)
+				var from_address = await arweave.wallets.ownerToAddress(tx.owner)
+                tx_row['from'] = await get_name(from_address)
                 tx_row['td_fee'] = arweave.ar.winstonToAr(tx.reward)
                 tx_row['td_qty'] = arweave.ar.winstonToAr(tx.quantity)
 
@@ -44,8 +47,7 @@ function refresh_inbox (wallet) {
             }))
         }
 
-        var mail_address = document.getElementById('mail_address')
-        mail_address.innerHTML = address
+        mail_address.innerHTML = await get_name(address)
 
         var inbox_pane = document.getElementById('inbox_pane')
         while (inbox_pane.firstChild) {
@@ -79,4 +81,43 @@ function refresh_inbox (wallet) {
             inbox_pane.appendChild(tr)
         })
     })()
+}
+
+async function get_name(addr) {
+	let get_name_query =
+		{
+			op: 'and',
+			expr1:
+				{
+					op: 'equals',
+					expr1: 'App-Name',
+					expr2: 'arweave-id'
+				},
+			expr2:
+				{
+					op: 'and',
+					expr1:
+						{
+							op: 'equals',
+							expr1: 'from',
+							expr2: addr
+						},
+					expr2:
+						{
+							op: 'equals',
+							expr1: 'Type',
+							expr2: 'name'
+						}
+				}
+		}
+
+	const txs = await this.arweave.api.post(`arql`, get_name_query)
+
+	if(txs.data.length == 0)
+		return addr
+
+	const tx = await this.arweave.transactions.get((txs.data)[0])
+
+	return tx.get('data', {decode: true, string: true})
+
 }
