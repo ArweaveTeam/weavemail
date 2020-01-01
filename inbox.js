@@ -47,7 +47,7 @@ function refresh_inbox (wallet) {
             }))
         }
 
-        mail_address.innerHTML = await get_name(address)
+        mail_address.textContent = await get_name(address)
 
         var inbox_pane = document.getElementById('inbox_pane')
         while (inbox_pane.firstChild) {
@@ -56,7 +56,7 @@ function refresh_inbox (wallet) {
 
         tx_rows.sort((a, b) => (Number(b.unixTime) - Number(a.unixTime)))
 
-        inbox_pane.innerHTML = ''
+        inbox_pane.textContent = ''
         tx_rows.forEach(function (item) {
             var tr = document.createElement('tr')
             var td_name = document.createElement('td')
@@ -71,11 +71,11 @@ function refresh_inbox (wallet) {
             td_name.appendChild(link)
 
             var tx_status = item.tx_status
-            td_from.innerHTML = item.from
-            td_fee.innerHTML = item.td_fee
-            td_qty.innerHTML = item.td_qty
+            td_from.textContent = item.from
+            td_fee.textContent = item.td_fee
+            td_qty.textContent = item.td_qty
 
-            link.innerHTML = item.id
+            link.textContent = item.id
             link.onclick = function () { show_mail(item.id) }
 
             inbox_pane.appendChild(tr)

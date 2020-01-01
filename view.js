@@ -28,17 +28,12 @@ function show_mail (txid) {
             var recipient = document.getElementById('compose_address')
             recipient.value = await arweave.wallets.ownerToAddress(tx.owner)
 
-            previousDateMsg.innerHTML = timeConverter(unixTime)
-            previousSender.innerHTML = recipient.value
-            previousMsg.innerHTML = mail
-            previousSubject.innerHTML = txid
+            previousDateMsg.textContent = timeConverter(unixTime)
+            previousSender.textContent = recipient.value
+            previousMsg.textContent = mail.body
+            previousSubject.textContent = mail.subject
 
-            if (mailContent) {
-                previousMsg.innerHTML = mailContent.body
-                previousSubject.innerHTML = mailContent.subject
-            }
-
-            (unixTime === '0') ? previousDateTag.style.display = 'none' : previousDateTag.style.display = 'block'
+            ;(unixTime === '0') ? previousDateTag.style.display = 'none' : previousDateTag.style.display = 'block'
 
             switch_to_page('compose_page')
             previous_page.style.display = 'block'
@@ -48,20 +43,26 @@ function show_mail (txid) {
 			arweave.utils.bufferToString(
 			    await decrypt_mail(arweave.utils.b64UrlToBuffer(tx.data), key))
 
-        mail = mail.replace(/(?:\r\n|\r|\n)/g, '<br>')
-        var mailContent
-
         try {
-            mailContent = JSON.parse(mail)
-        } catch (e) {}
+            mail = JSON.parse(mail);
+        } catch (e) {} 
 
-        view_contents.innerHTML = mail
-        view_subject.innerHTML = txid
-
-        if (mailContent) {
-            view_contents.innerHTML = mailContent.body
-            view_subject.innerHTML = mailContent.subject
+        // Upgrade old format.
+        if (typeof mail === 'string') {
+            mail = { 
+                body: mail,
+                subject: txid, 
+            }
         }
+
+        // Validate 
+        if (typeof mail !== 'object' || typeof mail.body !== 'string' || typeof mail.subject !== 'string') {
+            console.error(mail);
+            throw new Error(`Unexpected mail format: ${mail}`);
+        }
+          
+        view_contents.textContent = mail.body
+        view_subject.textContent = mail.subject
 
         function timeConverter (UNIX_timestamp) {
             var a = new Date(UNIX_timestamp * 1000)
@@ -75,5 +76,6 @@ function show_mail (txid) {
             var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec
             return time
         }
+
     })()
 }
