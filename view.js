@@ -39,9 +39,22 @@ function show_mail (txid) {
             previous_page.style.display = 'block'
         }
 
-        var mail =
-			arweave.utils.bufferToString(
-			    await decrypt_mail(arweave.utils.b64UrlToBuffer(tx.data), key))
+        var mail = {};
+
+        switch (tx.format) {
+            case 1:
+                mail = arweave.utils.bufferToString(
+                    await decrypt_mail(arweave.utils.b64UrlToBuffer(tx.data), key))
+                break;
+            case 2:
+                var data = await arweave.transactions.getData(txid)
+                mail = await arweave.utils.bufferToString(
+                    await decrypt_mail(arweave.utils.b64UrlToBuffer(data), key)
+                )
+                break;
+            default:
+                throw new Error(`Unexpected transaction format: ${tx.format}`);
+        }
 
         try {
             mail = JSON.parse(mail);
